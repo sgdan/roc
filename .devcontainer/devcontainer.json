@@ -1,0 +1,10 @@
+{
+	"build": {
+		"dockerfile": "Dockerfile",
+		"target": "roc-dev"
+	},
+	"mounts": [
+		"source=cargo-cache,target=/root/.cargo,type=volume",
+		"source=roc-cache,target=/root/.cache,type=volume"
+	]
+}
