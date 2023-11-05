@@ -10,9 +10,15 @@ RUN apt-get -y update \
 
 # Install Zig
 ARG ZIG_VERSION=0.11.0
-ARG ZIG_FOLDER=zig-linux-x86_64-$ZIG_VERSION
-RUN curl https://ziglang.org/download/$ZIG_VERSION/$ZIG_FOLDER.tar.xz \
-    | tar xJ -C /opt
+ARG TARGETARCH
+ARG ZIG_FOLDER=zig-$TARGETARCH
+RUN mkdir /opt/$ZIG_FOLDER \
+    && case "$TARGETARCH" in \
+		arm64) ARCH=aarch64 ;; \
+		amd64) ARCH=x86_64 ;; \
+	esac \
+    && curl https://ziglang.org/download/$ZIG_VERSION/zig-linux-$ARCH-$ZIG_VERSION.tar.xz \
+    | tar xJ --strip-components=1 -C /opt/$ZIG_FOLDER
 ENV PATH /opt/$ZIG_FOLDER:$PATH
 
 # Support lld (optional, see BUILDING_FROM_SOURCE.md)
